@@ -19,7 +19,7 @@ class Emitter {
         let eventFuncs = this.events[eventName];
         eventFuncs = eventFuncs.filter(fn => func !== fn);
         this.events[eventName] = eventFuncs;
-        console.log(`The release function has been called. `);
+        console.log('The release function has been called.');
       }
     };
   }
