@@ -18,17 +18,26 @@ class Emitter {
       release: () => {
         let eventFuncs = this.events[eventName];
         eventFuncs = eventFuncs.filter(fn => func !== fn);
-        this.events[eventName] = eventFuncs;
+
+        if (eventFuncs.length) {
+          this.events[eventName] = eventFuncs;
+        } else {
+          delete this.events[eventName];
+        }
+
         console.log('The release function has been called.');
       }
     };
   }
 
   emit(eventName, ...args) {
+    console.log(`Emitting ${eventName}`);
     const eventFuncs = this.events[eventName];
 
     if (eventFuncs) {
       eventFuncs.forEach(fn => fn.call(null, args));
+    } else {
+      console.log('No related event callback found.');
     }
   }
 }
@@ -45,6 +54,10 @@ const subscriberB = emitter.subscribe('click', data =>
   console.log([...data, data.toString()])
 );
 
+const subscribeC = emitter.subscribe('drag', data =>
+  console.log(JSON.stringify(data))
+);
+
 emitter.emit('click', 1, 2, 'a');
 
 subscriberCopy.release();
@@ -54,3 +67,9 @@ emitter.emit('click', 1, 2, 'a');
 subscriberA.release();
 
 emitter.emit('click', 1, 2);
+
+subscriberB.release();
+
+emitter.emit('click', 1);
+
+emitter.emit('drag', { x: 100, y: 200 });
