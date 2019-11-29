@@ -16,6 +16,8 @@ class Emitter {
 
     return {
       release: () => {
+        console.log('The release function has been called.');
+
         let eventFuncs = this.events[eventName];
         eventFuncs = eventFuncs.filter(fn => func !== fn);
 
@@ -24,8 +26,6 @@ class Emitter {
         } else {
           delete this.events[eventName];
         }
-
-        console.log('The release function has been called.');
       }
     };
   }
