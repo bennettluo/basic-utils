@@ -1,61 +1,38 @@
 let stack = [];
-let activeStack = [];
+let current = 0;
 let stackType = 'min';
 
 class ActiveStack {
   constructor() {}
 
-  push(num) {
-    if (!num || typeof num !== 'number') {
+  push(n) {
+    if (!n || typeof n !== 'number') {
       return;
     }
 
-    const peekOfActiveStack = this.peek(activeStack);
-    const matchedActiveStackRule =
-      activeStack.length == 0 ||
-      (activeStack.length &&
-        (stackType == 'min'
-          ? num < peekOfActiveStack
-          : num > peekOfActiveStack));
-    if (matchedActiveStackRule) {
-      activeStack.push(num);
+    if (
+      stack.length < 1 ||
+      (stackType == 'min' && n < current) ||
+      (stackType == 'max' && n > current)
+    ) {
+      stack.push(n);
+      current = n;
     }
-    stack.push(num);
   }
 
   pop() {
-    const cur = stack.pop();
-    if (cur == this.peek(activeStack)) {
-      activeStack.pop();
-    }
+    return stack.pop();
   }
 
-  getStackTop() {
-    return this.peek(stack);
+  most() {
+    return current;
   }
 
-  getActiveStackTop() {
-    return this.peek(activeStack);
+  peek() {
+    return stack[stack.length - 1];
   }
 
-  peek(stack) {
-    if (!Array.isArray(stack)) {
-      throw new Error('Stack is invalid.');
-    }
-    return stack.length ? stack[stack.length - 1] : null;
+  swap() {
+    stackType = stackType == 'min' ? 'max' : 'min';
   }
 }
-
-const stackInstance = new ActiveStack();
-
-stackInstance.push(20);
-stackInstance.push(10);
-stackInstance.push('ignored');
-stackInstance.push(30);
-stackInstance.push(5);
-stackInstance.push(999);
-
-stackInstance.pop();
-stackInstance.pop();
-
-console.log(stackInstance.getActiveStackTop());
